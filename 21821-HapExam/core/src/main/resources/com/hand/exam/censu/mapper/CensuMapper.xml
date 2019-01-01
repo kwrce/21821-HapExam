@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hand.exam.censu.mapper.CensuMapper">
+    <resultMap id="BaseResultMap" type="com.hand.exam.censu.dto.Censu">
+        <result column="LINE_ID" property="lineId" jdbcType="DECIMAL" />
+        <result column="ORDER_NUMBER" property="orderNumber" jdbcType="VARCHAR" />
+        <result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+        <result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR" />
+        <result column="ORDER_DATE" property="orderDate" jdbcType="DATE" />
+        <result column="ORDER_STATUS" property="orderStatus" jdbcType="VARCHAR" />
+        <result column="ITEM_CODE" property="itemCode" jdbcType="VARCHAR" />
+        <result column="ITEM_DESCRIPTION" property="itemDescription" jdbcType="VARCHAR" />
+        <result column="ORDERD_QUANTITY" property="orderdQuantity" jdbcType="DECIMAL" />
+        <result column="UNIT_SELLING_PRICE" property="unitSellingPrice" jdbcType="DECIMAL" />
+    </resultMap>
+    <select id="selectByCensu" parameterType="com.hand.exam.censu.dto.Censu" resultMap="BaseResultMap">
+        SELECT line.LINE_ID,
+        header.ORDER_NUMBER,
+        company.COMPANY_NAME,
+        customer.CUSTOMER_NAME,
+        header.ORDER_DATE,
+        header.ORDER_STATUS,
+        item.ITEM_CODE,
+        item.ITEM_DESCRIPTION,
+        line.ORDERD_QUANTITY,
+        line.UNIT_SELLING_PRICE
+        FROM hap_om_order_lines line,
+        hap_om_order_headers header,
+        hap_org_companys company,
+        hap_inv_inventory_items item,
+        hap_ar_customers customer
+        <where>
+            line.HEADER_ID=header.HEADER_ID
+            AND line.INVENTORY_ITEM_ID =item.INVENTORY_ITEM_ID
+            AND header.CUSTOMER_ID=customer.CUSTOMER_ID
+            AND header.COMPANY_ID=company.COMPANY_ID
+            <if test="lineId != null">
+                and line.LINE_ID like #{lineId,jdbcType=BIGINT}
+            </if>
+            <if test="orderNumber != null">
+                and header.ORDER_NUMBER like #{orderNumber,jdbcType=VARCHAR}
+            </if>
+            <if test="companyName != null">
+                and company.COMPANY_NAME like #{companyName,jdbcType=VARCHAR}
+            </if>
+            <if test="customerName != null">
+                and customer.CUSTOMER_NAME like #{customerName,jdbcType=VARCHAR}
+            </if>
+            <if test="orderDate != null">
+                and header.ORDER_DATE like #{orderDate,jdbcType=DATE}
+            </if>
+            <if test="orderStatus != null">
+                and header.ORDER_STATUS like #{orderStatus,jdbcType=VARCHAR}
+            </if>
+            <if test="itemCode != null">
+                and item.ITEM_CODE like #{itemCode,jdbcType=VARCHAR}
+            </if>
+            <if test="itemDescription != null">
+                and item.ITEM_DESCRIPTION like #{itemDescription,jdbcType=VARCHAR}
+            </if>
+            <if test="orderdQuantity != null">
+                and line.ORDERD_QUANTITY like #{orderdQuantity,jdbcType=BIGINT}
+            </if>
+            <if test="unitSellingPrice != null">
+                and line.UNIT_SELLING_PRICE like #{unitSellingPrice,jdbcType=BIGINT}
+            </if>
+        </where>
+        ORDER BY line_id asc
+    </select>
+
+    <insert id="insertCensu" parameterType="com.hand.exam.censu.dto.Censu">
+        INSERT INTO my_test01
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="myId != null" >
+                MY_ID,
+            </if>
+            <if test="myName != null" >
+                MY_NAME,
+            </if>
+            <if test="myAge != null">
+                MY_AGE,
+            </if>
+            <if test="myBirthday != null">
+                MY_BIRTHDAY,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="myId != null" >
+                #{myId,jdbcType=VARCHAR},
+            </if>
+            <if test="myName != null" >
+                #{myName,jdbcType=VARCHAR},
+            </if>
+            <if test="myAge != null">
+                #{myAge,jdbcType=DECIMAL},
+            </if>
+            <if test="myBirthday != null">
+                #{myBirthday,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateCensu" parameterType="com.hand.exam.censu.dto.Censu" >
+        update my_test01
+        <set >
+            <if test="myId != null" >
+                MY_ID = #{myId,jdbcType=VARCHAR},
+            </if>
+            <if test="myName != null" >
+                MY_NAME = #{myName,jdbcType=VARCHAR},
+            </if>
+            <if test="myAge != null">
+                MY_AGE = #{myAge,jdbcType=DECIMAL},
+            </if>
+            <if test="myBirthday != null">
+                MY_BIRTHDAY = #{myBirthday,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where MY_ID = #{myId,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="deleteCensu" parameterType="com.hand.exam.censu.dto.Censu" >
+        delete from my_test01
+        where MY_ID= #{myId,jdbcType=DECIMAL}
+    </delete>
+
+</mapper>
