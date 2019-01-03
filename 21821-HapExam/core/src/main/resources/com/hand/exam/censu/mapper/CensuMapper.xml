@@ -13,6 +13,13 @@
         <result column="ITEM_DESCRIPTION" property="itemDescription" jdbcType="VARCHAR" />
         <result column="ORDERD_QUANTITY" property="orderdQuantity" jdbcType="DECIMAL" />
         <result column="UNIT_SELLING_PRICE" property="unitSellingPrice" jdbcType="DECIMAL" />
+        <result column="INVENTORY_ITEM_ID" property="inventoryItemId" jdbcType="DECIMAL" />
+        <result column="CUSTOMER_ID" property="customerId" jdbcType="DECIMAL" />
+        <result column="COMPANY_ID" property="companyId" jdbcType="DECIMAL" />
+        <result column="ORDER_QUANTITY_UOM" property="orderQuantityUOM" jdbcType="VARCHAR" />
+        <result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+        <result column="HEADER_ID" property="headerId" jdbcType="DECIMAL" />
+        <result column="TOTAL" property="total" jdbcType="DECIMAL" />
     </resultMap>
     <select id="selectByCensu" parameterType="com.hand.exam.censu.dto.Censu" resultMap="BaseResultMap">
         SELECT line.LINE_ID,
@@ -24,7 +31,15 @@
         item.ITEM_CODE,
         item.ITEM_DESCRIPTION,
         line.ORDERD_QUANTITY,
-        line.UNIT_SELLING_PRICE
+        line.UNIT_SELLING_PRICE,
+        item.INVENTORY_ITEM_ID,
+        customer.CUSTOMER_ID,
+        company.COMPANY_ID,
+        line.ORDER_QUANTITY_UOM,
+        line.DESCRIPTION,
+        header.HEADER_ID,
+        line.UNIT_SELLING_PRICE*line.ORDERD_QUANTITY TOTAL
+
         FROM hap_om_order_lines line,
         hap_om_order_headers header,
         hap_org_companys company,
@@ -41,8 +56,16 @@
             <if test="orderNumber != null">
                 and header.ORDER_NUMBER like #{orderNumber,jdbcType=VARCHAR}
             </if>
+            <if test="companyId != null">
+                and company.COMPANY_ID like #{companyId,jdbcType=VARCHAR}
+            </if>
+
             <if test="companyName != null">
                 and company.COMPANY_NAME like #{companyName,jdbcType=VARCHAR}
+            </if>
+
+            <if test="customerId != null">
+                and customer.CUSTOMER_ID like #{customerId,jdbcType=VARCHAR}
             </if>
             <if test="customerName != null">
                 and customer.CUSTOMER_NAME like #{customerName,jdbcType=VARCHAR}
@@ -58,6 +81,9 @@
             </if>
             <if test="itemDescription != null">
                 and item.ITEM_DESCRIPTION like #{itemDescription,jdbcType=VARCHAR}
+            </if>
+            <if test="inventoryItemId != null">
+                and item.INVENTORY_ITEM_ID like #{inventoryItemId,jdbcType=VARCHAR}
             </if>
             <if test="orderdQuantity != null">
                 and line.ORDERD_QUANTITY like #{orderdQuantity,jdbcType=BIGINT}

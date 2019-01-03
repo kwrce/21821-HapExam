@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.validation.BindingResult;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +31,9 @@ public class CensuController extends BaseController {
         IRequest iRequest = createRequestContext(request);
         List<Censu> datas = censuService.selectByCensu(iRequest, condition, page,
                 pagesize);
+        for(Censu censu:datas){
+            System.out.println(censu);
+        }
         return new ResponseData(datas);
     }
 
@@ -39,7 +41,6 @@ public class CensuController extends BaseController {
     @ResponseBody
     public ResponseData submit(HttpServletRequest request, @RequestBody
             List<Censu> census) {
-
         IRequest iRequest = createRequestContext(request);
         List<Censu> datas = censuService.batchUpdate(iRequest, census);
         return new ResponseData(datas);
@@ -53,6 +54,7 @@ public class CensuController extends BaseController {
         censuService.batchDelete(census);
         return new ResponseData();
     }
+
     @InitBinder
     protected void init(HttpServletRequest request, ServletRequestDataBinder binder) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");

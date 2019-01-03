@@ -11,6 +11,7 @@
     </resultMap>
     <select id="selectLOV" parameterType="com.hand.exam.customer.dto.Customer" resultMap="BaseResultMap">
         SELECT
+        CUSTOMER_ID,
         CUSTOMER_NUMBER,
         CUSTOMER_NAME
         FROM

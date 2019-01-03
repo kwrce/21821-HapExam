@@ -10,6 +10,7 @@
     </resultMap>
     <select id="selectById" parameterType="com.hand.exam.companys.dto.Companys" resultMap="BaseResultMap">
         SELECT
+        COMPANY_ID,
         COMPANY_NUMBER,
         COMPANY_NAME
         FROM

@@ -1,13 +1,6 @@
 <#include "../include/header.html">
-<script src="${base.contextPath}/common/code?orderStatus=HAP_OM_ORDER_STATUS" type="text/javascript"></script>
 <script type="text/javascript">
-
-    var viewModel = Hap.createGridViewModel("#grid",{
-        requeteMethodData: [
-            {mean: "GET", value: "GET"},
-            {mean: "POST", value: "POST"}],
-        orderStatus: orderStatus
-    });
+    var viewModel = Hap.createGridViewModel("#grid");
 </script>
 <style>
     td{
@@ -32,12 +25,22 @@
         <table>
             <tr>
                 <td>
+                    &nbsp;&nbsp;&nbsp;<@spring.message "Censu.orderNumber"/>&nbsp;&nbsp;&nbsp;
+                </td>
+                <td>
+                    <input id="orderNumber" type="text"
+                           data-role="maskedtextbox"
+                           placeholder='<@spring.message "Censu.orderNumber"/>'
+                           data-bind="value:model.orderNumber">
+                </td>
+                <td>
                     &nbsp;&nbsp;&nbsp;<@spring.message "Censu.companyName"/>&nbsp;&nbsp;&nbsp;
                 </td>
                 <td>
                     <input type="text" id="companyName"
                            placeholder='<@spring.message "Censu.companyName"/>'
-                           data-bind="value:model.companyId,text:model.companyName">
+                           data-bind="value:model.companyName,text:model.companyName">
+
                 </td>
                 <td>
                     &nbsp;&nbsp;&nbsp;<@spring.message "Censu.customerName"/>&nbsp;&nbsp;&nbsp;
@@ -45,15 +48,8 @@
                 <td>
                     <input type="text" id="customerName"
                            placeholder='<@spring.message "Censu.customerName"/>'
-                           data-bind="value:model.customerId,text:model.customerName">
-                </td>
-                <td>
-                    &nbsp;&nbsp;&nbsp;<@spring.message "Censu.orderNumber"/>&nbsp;&nbsp;&nbsp;
-                </td>
-                <td><input id="orderNumber" type="text"
-                           data-role="maskedtextbox"
-                           placeholder='<@spring.message "Censu.orderNumber"/>'
-                           data-bind="value:model.orderNumber">
+                           data-bind="value:model.customerName,text:model.customerName">
+
                 </td>
             </tr>
             <tr>
@@ -62,7 +58,7 @@
                 </td>
                 <td>
                     <input type="text" id="itemDescription" placeholder='<@spring.message "Censu.itemDescription"/>'
-                           data-bind="value:model.inventoryItemId,text:model.itemDescription">
+                           data-bind="value:model.itemDescription,text:model.itemDescription">
                     <script>
                         $("#companyName").kendoLov(${lovProvider.getLov(base.contextPath, base.locale,
         "LOV_COMPANY_ID")});
@@ -77,10 +73,9 @@
                     &nbsp;&nbsp;&nbsp;<@spring.message "Censu.orderStatus"/>&nbsp;&nbsp;&nbsp;
                 </td>
                 <td>
-                    <select data-role="combobox" data-value-primitive="true"
-                            data-text-field="meaning" data-value-field="value"
+                    <select id="orderStatus" data-value-primitive="true"
                             placeholder='<@spring.message "Censu.orderStatus"/>'
-                            data-bind="source:orderStatus,value:model.orderStatus"></select>
+                            data-bind="value: model.orderStatus"></select>
 
                     <!--<input type="date" data-role="datepicker"placeholder='<@spring.message "demo.myBirthday"/>' data-bind="value:model.myBirthday" class="k-datepicker">-->
                 </td>
@@ -96,10 +91,9 @@
                               type="submit"><@spring.message "hap.query"/></span>
                         <span class="btn btn-primary" id="export" style="float:left;width:70px;
                  margin-left:15px;"><@spring.message " hap.exportexcel"/></span>
-                        <div id="test" style="display: none"></div>
                     </div>
                     <div style="clear:both"></div>
-                    <!--<script>kendo.bind($('#query-form'), viewModel);</script>-->
+                    <script>kendo.bind($('#query-form'), viewModel);</script>
                 </td>
             </tr>
         </table>
@@ -107,7 +101,7 @@
         <div style="clear:both">
             <div style="width: 100%;height: 30px;background-color:#e7e5e0">
                 <div style="height: 100%;line-height: 30px;margin-left: 10px">
-                    <a href="/insert"><span class="glyphicon glyphicon-plus"><@spring.message "hap.new"/></span></a>
+                    <a href="../customer/customer.html"><span class="glyphicon glyphicon-plus">新建</span></a>
                 </div>
             </div>
             <div id="grid"></div>
@@ -162,18 +156,15 @@
             data: 'rows',
             total: 'total',
             model: {
-                    id: "lineId",
-                    fields: {
+                id: "lineId",
+                fields: {
                     lineId: {type: "long"},
                     orderNumber: {type: "string"},
                     companyName: {type: "string"},
-                    companyId: {type: "long"},
-                    customerId: {type: "long"},
                     customerName: {type: "string"},
                     orderDate: {type: "date"},
                     orderStatus: {type: "string"},
                     itemCode: {type: "string"},
-                    inventoryItemId:{type: "long"},
                     itemDescription: {type: "string"},
                     orderdQuantity: {type: "long"},
                     unitSellingPrice: {type: "long"}
@@ -181,84 +172,6 @@
             }
         }
 
-    });
-    var test = $("#test").kendoGrid({
-        dataSource: dataSource,
-        height: '0',
-        weight: '0',
-        excel: {
-            fileName: "Order.xlsx",
-            proxyURL: "https://demos.telerik.com/kendo-ui/service/export",
-            filterable: true,
-            allPages:true
-        },
-        columns: [
-            // {
-            //     field: "lineId",
-            //     title: '<@spring.message "censu.lineid"/>',
-            //     attributes: {style: "text-align:center"},
-            //     headerAttributes: {
-            //         "class": "table-header-cell",
-            //         style  : "text-align: center"
-            //     },
-            //     width: 80
-            // },
-            {
-                field: "orderNumber",
-                title: '<@spring.message "censu.ordernumber"/>',
-                width:50
-            },
-
-            {
-                field: "companyName",
-                title: '<@spring.message "censu.companyname"/>',
-                width:50
-            },
-
-            {
-                field: "customerName",
-                title: '<@spring.message "censu.customername"/>',
-                width:50
-            },
-            {
-                field: "orderDate",
-                title: '<@spring.message "censu.orderDate"/>',
-                width:50
-            },
-            {
-                field: "orderStatus",
-                title: '<@spring.message "censu.orderstatus"/>',
-                width:50
-            },
-
-            {
-                field: "itemCode",
-                title: '<@spring.message "censu.itemcode"/>',
-                width:50
-            },
-            {
-                field: "itemDescription",
-                title: '<@spring.message "censu.itemdescription"/>',
-                width:50
-            },
-            {
-                field: "orderdQuantity",
-                title: '<@spring.message "censu.orderdQuantity"/>',
-                width:50
-            },
-            {
-                field: "unitSellingPrice",
-                title: '<@spring.message "censu.unitsellingprice"/>',
-                width:50
-            }
-        ],
-        editable: false
-    }).data("kendoGrid");
-
-    //打印调用
-    $("#export").click(function() {
-        var grid = $("#test").data("kendoGrid");
-        grid.saveAsExcel();
     });
     var grid = $("#grid").kendoGrid({
         dataSource: dataSource,
@@ -312,17 +225,16 @@
                 },
                 width: 66
             },
-
-            {
-                field: "customerName",
-                title: '<@spring.message "censu.customername"/>',
-                attributes: {style: "text-align:center"},
-                headerAttributes: {
-                    "class": "table-header-cell",
-                    style  : "text-align: center"
-                },
-                width: 66
-            },
+            // {
+            //     field: "customerName",
+            //     title: '<@spring.message "censu.customername"/>',
+            //     attributes: {style: "text-align:center"},
+            //     headerAttributes: {
+            //         "class": "table-header-cell",
+            //         style  : "text-align: center"
+            //     },
+            //     width: 1
+            // },
             {
                 field: "orderDate",
                 title: '<@spring.message "censu.orderDate"/>',
@@ -355,16 +267,16 @@
             //     },
             //     width: 80
             // },
-            // {
-            //     field: "itemDescription",
-            //     title: '<@spring.message "censu.itemdescription"/>',
-            //     attributes: {style: "text-align:center"},
-            //     headerAttributes: {
-            //         "class": "table-header-cell",
-            //         style: "text-align: center"
-            //     },
-            //     width: 66
-            // },
+            {
+                field: "itemDescription",
+                title: '<@spring.message "censu.itemdescription"/>',
+                attributes: {style: "text-align:center"},
+                headerAttributes: {
+                    "class": "table-header-cell",
+                    style: "text-align: center"
+                },
+                width: 66
+            },
             {
                 field: "unitSellingPrice",
                 title: '<@spring.message "censu.unitsellingprice"/>',
@@ -393,7 +305,10 @@
         editable: false
     }).data("kendoGrid");
 
-
+    $("#export").click(function() {
+        var grid = $("#grid").data("kendoGrid");
+        grid.saveAsExcel();
+    });
 
     //自动根据当前屏幕大小调整表格
     Hap.autoResizeGrid("#grid");
@@ -427,7 +342,7 @@
         this.companyName = data.companyName;
         this.customerName = data.customerName;
         this.orderDate = data.orderDate;
-        //this.orderStatus = data.orderStatus;
+        this.orderStatus = data.orderStatus;
         this.itemCode = data.itemCode;
         this.itemCescription = data.itemCescription;
         this.orderdQuantity = data.orderdQuantity;
@@ -457,30 +372,31 @@
         dataTextField: "orderNumber",
         dataSource: myLocalDataSource
     });
-    // $("#orderStatus").kendoComboBox({
-    //     dataTextField: "orderStatus",
-    //     dataValueField: "orderStatus",
-    //     animation: {
-    //         close: {
-    //             effects: "fadeOut zoom:out",
-    //             duration: 300
-    //         },
-    //         open: {
-    //             effects: "fadeIn zoom:in",
-    //             duration: 300
-    //         }
-    //     },
-    //     dataSource: myLocalDataSource
-    // });
-    // $("#myBirthday").kendoDatePicker({
-    //     animation: {
-    //         close: {},
-    //         open: {}
-    //     },
-    //     format: "{0:yyyy-MM-dd HH:mm:ss}",
-    //     change: function () {
-    //     }
-    // });
+    $("#orderStatus").kendoComboBox({
+        dataTextField: "orderStatus",
+        dataValueField: "orderStatus",
+        animation: {
+            close: {
+                effects: "fadeOut zoom:out",
+                duration: 300
+            },
+            open: {
+                effects: "fadeIn zoom:in",
+                duration: 300
+            }
+        },
+        dataSource: myLocalDataSource
+    });
+    $("#myBirthday").kendoDatePicker({
+        animation: {
+            close: {},
+            open: {}
+        },
+        format: "{0:yyyy-MM-dd HH:mm:ss}",
+        change: function () {
+        }
+    });
+
 </script>
 </body>
 </html>
