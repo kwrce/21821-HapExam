@@ -15,7 +15,7 @@ public class Item extends BaseDTO {
 
      public static final String FIELD_INVENTORY_ITEM_ID = "inventoryItemId";
      public static final String FIELD_ITEM_CODE = "itemCode";
-     public static final String FIELD_ITEM_UOM = "itemUom";
+     public static final String FIELD_ITEM_UOM = "itemUOM";
      public static final String FIELD_ITEM_DESCRIPTION = "itemDescription";
      public static final String FIELD_ORDER_FLAG = "orderFlag";
      public static final String FIELD_START_ACTIVE_DATE = "startActiveDate";
@@ -33,7 +33,7 @@ public class Item extends BaseDTO {
 
      @NotEmpty
      @Length(max = 60)
-     private String itemUom; //物料单位
+     private String itemUOM; //物料单位
 
      @NotEmpty
      @Length(max = 240)
@@ -68,12 +68,12 @@ public class Item extends BaseDTO {
          return itemCode;
      }
 
-     public void setItemUom(String itemUom){
-         this.itemUom = itemUom;
+     public void setitemUOM(String itemUOM){
+         this.itemUOM = itemUOM;
      }
 
-     public String getItemUom(){
-         return itemUom;
+     public String getitemUOM(){
+         return itemUOM;
      }
 
      public void setItemDescription(String itemDescription){

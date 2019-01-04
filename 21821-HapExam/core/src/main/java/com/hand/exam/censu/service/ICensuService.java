@@ -13,7 +13,8 @@ public interface ICensuService extends IBaseService<Censu>, ProxySelf<ICensuServ
             pagesize);
     List<Censu> selectByCensuDetail(IRequest requestContext, Censu censu, int page, int
             pagesize);
-
     List<Censu> batchUpdate(IRequest requestContext, @StdWho List<Censu>
             census);
+
+    int addCensu(IRequest iRequest, Censu censu);
 }

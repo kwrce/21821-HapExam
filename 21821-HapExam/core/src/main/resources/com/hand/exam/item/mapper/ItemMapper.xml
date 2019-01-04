@@ -5,7 +5,7 @@
     <resultMap id="BaseResultMap" type="com.hand.exam.item.dto.Item">
         <result column="INVENTORY_ITEM_ID" property="inventoryItemId" jdbcType="DECIMAL" />
         <result column="ITEM_CODE" property="itemCode" jdbcType="VARCHAR" />
-        <result column="ITEM_UOM" property="itemUom" jdbcType="VARCHAR" />
+        <result column="ITEM_UOM" property="itemUOM" jdbcType="VARCHAR" />
         <result column="ITEM_DESCRIPTION" property="itemDescription" jdbcType="VARCHAR" />
         <result column="ORDER_FLAG" property="orderFlag" jdbcType="VARCHAR" />
         <result column="START_ACTIVE_DATE" property="startActiveDate" jdbcType="DATE" />
@@ -16,7 +16,8 @@
         SELECT
         INVENTORY_ITEM_ID,
         ITEM_CODE,
-        ITEM_DESCRIPTION
+        ITEM_DESCRIPTION,
+        ITEM_UOM
         FROM
         hap_inv_inventory_items
         <where>

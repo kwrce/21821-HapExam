@@ -40,11 +40,16 @@ public class Censu extends BaseDTO {
     public static final String FIELD_DESCRIPTION = "description";
     public static final String FIELD_HEADER_ID = "headerId";
     public static final String FIELD_TOTAL = "total";
+    public static final String FIELD_ITEM_UOM = "itemUOM";
 
 
     @Id
     @GeneratedValue
     private Long lineId; //公司ID
+
+    @NotNull
+    private String itemUOM;
+
 
     @NotEmpty
     @Length(max = 60)
@@ -98,6 +103,14 @@ public class Censu extends BaseDTO {
 
     @NotNull
     private Long total;
+
+    public String getItemUOM() {
+        return itemUOM;
+    }
+
+    public void setItemUOM(String itemUOM) {
+        this.itemUOM = itemUOM;
+    }
 
     public Long getInventoryItemId() {
         return inventoryItemId;

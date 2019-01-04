@@ -20,7 +20,9 @@
         <result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
         <result column="HEADER_ID" property="headerId" jdbcType="DECIMAL" />
         <result column="TOTAL" property="total" jdbcType="DECIMAL" />
+        <result column="ITEM_UOM" property="itemUOM" jdbcType="VARCHAR" />
     </resultMap>
+    <!--查询订单-->
     <select id="selectByCensu" parameterType="com.hand.exam.censu.dto.Censu" resultMap="BaseResultMap">
         SELECT header.HEADER_ID,
         header.ORDER_NUMBER,
@@ -91,6 +93,7 @@
         ORDER BY header.HEADER_ID asc
     </select>
 
+    <!--查询物料详情-->
     <select id="selectByCensuDetail" parameterType="com.hand.exam.censu.dto.Censu" resultMap="BaseResultMap">
         SELECT line.LINE_ID,
         header.ORDER_NUMBER,
@@ -108,7 +111,8 @@
         item.ORDER_QUANTITY_UOM,
         line.DESCRIPTION,
         header.HEADER_ID,
-        line.UNIT_SELLING_PRICE*line.ORDERD_QUANTITY TOTAL
+        line.UNIT_SELLING_PRICE*line.ORDERD_QUANTITY TOTAL,
+        item.ITEM_UOM
 
         FROM hap_om_order_lines line,
         hap_om_order_headers header,
@@ -126,98 +130,142 @@
             <if test="orderNumber != null">
                 and header.ORDER_NUMBER like #{orderNumber,jdbcType=VARCHAR}
             </if>
-            <if test="companyId != null">
-                and company.COMPANY_ID like #{companyId,jdbcType=VARCHAR}
-            </if>
 
-            <if test="companyName != null">
-                and company.COMPANY_NAME like #{companyName,jdbcType=VARCHAR}
-            </if>
-
-            <if test="customerId != null">
-                and customer.CUSTOMER_ID like #{customerId,jdbcType=VARCHAR}
-            </if>
-            <if test="customerName != null">
-                and customer.CUSTOMER_NAME like #{customerName,jdbcType=VARCHAR}
-            </if>
-            <if test="orderDate != null">
-                and header.ORDER_DATE like #{orderDate,jdbcType=DATE}
-            </if>
-            <if test="orderStatus != null">
-                and header.ORDER_STATUS like #{orderStatus,jdbcType=VARCHAR}
-            </if>
-            <if test="itemCode != null">
-                and item.ITEM_CODE like #{itemCode,jdbcType=VARCHAR}
-            </if>
-            <if test="itemDescription != null">
-                and item.ITEM_DESCRIPTION like #{itemDescription,jdbcType=VARCHAR}
-            </if>
-            <if test="inventoryItemId != null">
-                and item.INVENTORY_ITEM_ID like #{inventoryItemId,jdbcType=VARCHAR}
-            </if>
-            <if test="orderdQuantity != null">
-                and line.ORDERD_QUANTITY like #{orderdQuantity,jdbcType=BIGINT}
-            </if>
-            <if test="unitSellingPrice != null">
-                and line.UNIT_SELLING_PRICE like #{unitSellingPrice,jdbcType=BIGINT}
-            </if>
         </where>
         ORDER BY line_id asc
     </select>
+
+    <!--添加物料-->
     <insert id="insertCensu" parameterType="com.hand.exam.censu.dto.Censu">
-        INSERT INTO my_test01
+        INSERT INTO hap_om_order_lines
         <trim prefix="(" suffix=")" suffixOverrides="," >
-            <if test="myId != null" >
-                MY_ID,
+            <if test="headerId != null" >
+                HEADER_ID,
             </if>
-            <if test="myName != null" >
-                MY_NAME,
+            <if test="headerId != null" >
+                LINE_NUMBER,
             </if>
-            <if test="myAge != null">
-                MY_AGE,
+            <if test="inventoryItemId != null" >
+                INVENTORY_ITEM_ID,
             </if>
-            <if test="myBirthday != null">
-                MY_BIRTHDAY,
+            <if test="orderdQuantity != null">
+                ORDERD_QUANTITY,
+            </if>
+            <if test="unitSellingPrice != null">
+                UNIT_SELLING_PRICE,
+            </if>
+            <if test="itemUOM != null">
+                ORDER_QUANTITY_UOM,
+            </if>
+            <if test="description != null">
+                DESCRIPTION,
+            </if>
+            <if test="companyId != null">
+                COMPANY_ID,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
-            <if test="myId != null" >
-                #{myId,jdbcType=VARCHAR},
+            <if test="headerId != null" >
+                #{headerId,jdbcType=DECIMAL},
             </if>
-            <if test="myName != null" >
-                #{myName,jdbcType=VARCHAR},
+            <if test="headerId != null" >
+                #{headerId,jdbcType=DECIMAL},
             </if>
-            <if test="myAge != null">
-                #{myAge,jdbcType=DECIMAL},
+            <if test="inventoryItemId != null" >
+                #{inventoryItemId,jdbcType=DECIMAL},
             </if>
-            <if test="myBirthday != null">
-                #{myBirthday,jdbcType=TIMESTAMP},
+            <if test="orderdQuantity != null">
+                #{orderdQuantity,jdbcType=DECIMAL},
+            </if>
+            <if test="unitSellingPrice != null">
+                #{unitSellingPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="itemUOM != null">
+                #{itemUOM,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="companyId != null">
+                #{companyId,jdbcType=DECIMAL},
             </if>
         </trim>
     </insert>
 
+
+    <!--更新物料-->
     <update id="updateCensu" parameterType="com.hand.exam.censu.dto.Censu" >
-        update my_test01
+        update hap_om_order_lines
         <set >
-            <if test="myId != null" >
-                MY_ID = #{myId,jdbcType=VARCHAR},
+            <if test="headerId != null" >
+                HEADER_ID = #{headerId,jdbcType=DECIMAL},
             </if>
-            <if test="myName != null" >
-                MY_NAME = #{myName,jdbcType=VARCHAR},
+            <if test="headerId != null" >
+                LINE_NUMBER=#{headerId,jdbcType=DECIMAL},
             </if>
-            <if test="myAge != null">
-                MY_AGE = #{myAge,jdbcType=DECIMAL},
+            <if test="inventoryItemId != null" >
+                INVENTORY_ITEM_ID=#{inventoryItemId,jdbcType=DECIMAL},
             </if>
-            <if test="myBirthday != null">
-                MY_BIRTHDAY = #{myBirthday,jdbcType=TIMESTAMP},
+            <if test="orderdQuantity != null">
+                ORDERD_QUANTITY=#{orderdQuantity,jdbcType=DECIMAL},
+            </if>
+            <if test="unitSellingPrice != null">
+                UNIT_SELLING_PRICE=#{unitSellingPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="itemUOM != null">
+                ORDER_QUANTITY_UOM=#{itemUOM,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                DESCRIPTION=#{description,jdbcType=VARCHAR},
+            </if>
+            <if test="companyId != null">
+                COMPANY_ID=#{companyId,jdbcType=DECIMAL},
             </if>
         </set>
-        where MY_ID = #{myId,jdbcType=VARCHAR}
+        where LINE_ID = #{lineId,jdbcType=DECIMAL}
     </update>
 
-    <delete id="deleteCensu" parameterType="com.hand.exam.censu.dto.Censu" >
-        delete from my_test01
-        where MY_ID= #{myId,jdbcType=DECIMAL}
+    <delete id="deleteByPrimaryKey" parameterType="com.hand.exam.censu.dto.Censu" >
+        delete from hap_om_order_lines
+        where LINE_ID = #{lineId,jdbcType=DECIMAL}
     </delete>
 
+    <!--添加订单-->
+    <insert id="insertCensu" parameterType="com.hand.exam.censu.dto.Censu" >
+        INSERT INTO hap_om_order_headers
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="orderNumber != null" >
+                ORDER_NUMBER,
+            </if>
+            <if test="companyId != null" >
+                COMPANY_ID,
+            </if>
+            <if test="orderDate != null">
+                ORDER_DATE,
+            </if>
+            <if test="orderStatus != null">
+                ORDER_STATUS,
+            </if>
+            <if test="customerId != null">
+                CUSTOMER_ID,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="orderNumber != null" >
+                #{orderNumber,jdbcType=DECIMAL},
+            </if>
+            <if test="companyId != null" >
+                #{companyId,jdbcType=DECIMAL},
+            </if>
+            <if test="orderDate != null" >
+                #{orderDate,jdbcType=DATE},
+            </if>
+            <if test="orderStatus != null">
+                #{orderStatus,jdbcType=DECIMAL},
+            </if>
+            <if test="customerId != null">
+                #{customerId,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
 </mapper>

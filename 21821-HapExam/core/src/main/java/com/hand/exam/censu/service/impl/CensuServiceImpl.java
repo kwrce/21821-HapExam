@@ -4,7 +4,10 @@ import com.github.pagehelper.PageHelper;
 import com.hand.exam.censu.mapper.CensuMapper;
 import com.hand.hap.core.IRequest;
 import com.hand.hap.system.dto.DTOStatus;
+import com.hand.hap.system.service.IBaseService;
 import com.hand.hap.system.service.impl.BaseServiceImpl;
+import org.apache.poi.hssf.record.formula.functions.T;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.hand.exam.censu.dto.Censu;
@@ -12,6 +15,8 @@ import com.hand.exam.censu.service.ICensuService;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -54,4 +59,13 @@ public class CensuServiceImpl extends BaseServiceImpl<Censu> implements ICensuSe
         }
         return census;
     }
+
+    @Override
+    public int addCensu(IRequest iRequest, Censu censu) {
+        censu.setLastUpdateDate(new Date());
+        int row =censuMapper.addOneCensu(censu);
+        return row;
+    }
+
+
 }

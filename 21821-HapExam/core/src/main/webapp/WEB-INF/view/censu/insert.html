@@ -8,6 +8,7 @@
             {mean: "POST", value: "POST"}],
         orderStatus: orderStatus
     });
+    var BaseUrl = _basePath;
 </script>
 <style>
     td{
@@ -101,36 +102,47 @@
                 </td>
             </tr>
             <tr>
+                <script type="text/javascript">
+<!--=====================================================获取viewmodel参数=======================================================-->
+                $(document).ready(function(){
+                    $("#select input").click(function(){
+                        alert($(this).val());
+                    });
+                });
+function mysave() {
+                        var orderNumber=viewModel.model.get("orderNumber");
+                        var companyId=viewModel.model.get("companyId");
+                        var orderDate=viewModel.model.get("orderDate");
+                        var orderStatus2=viewModel.model.get("orderStatus");
+                        var customerId=viewModel.model.get("customerId");
+
+                    }
+                </script>
                 <td colspan="4">
-                    <div style="margin-right:0px;">
-                        <span class="btn btn-default" style="float:left;width:70px"
-                              data-bind="click:reset" type="button"><@spring.message
-                 "hap.reset"/></span>
+                    <div style="margin-right:0px;" id="select">
+                        <input class="btn btn-default" name="sp" value="save" style="float:left;width:70px" type="button" onclick="mysave()">
+                            <@spring.message "hap.save"/></input>
                         <span class="btn btn-primary" style="float:left;width:70px;
-                 margin-left:15px;" data-bind="click:query"
-                              type="submit"><@spring.message "hap.query"/></span>
+                 margin-left:15px;" ><@spring.message "hap.submit"/></span>
                         <span class="btn btn-primary" id="export" style="float:left;width:70px;
                  margin-left:15px;"><@spring.message " hap.exportexcel"/></span>
-                        <span class="btn btn-default" style="float:left;width:70px;
+                        <span class="btn btn-default" style="float:left;width:80px;
                  margin-left:15px;"
                               data-bind="click:reset" type="button"><@spring.message
-                 "hap.reset"/></span>
+                 "censu.deleteall"/></span>
                         <span class="btn btn-default" style="float:left;width:70px;
-                 margin-left:15px;"
-                              data-bind="click:reset" type="button"><@spring.message
-                 "hap.reset"/></span>
+                 margin-left:15px;"data-bind="click:reset" type="button"><@spring.message
+                 "hap.examine"/></span>
                         <span class="btn btn-default" style="float:left;width:70px;
-                 margin-left:15px;"
-                              data-bind="click:reset" type="button"><@spring.message
-                 "hap.reset"/></span>
+                 margin-left:15px;"data-bind="click:reset" type="button"><@spring.message
+                 "hap.refuse"/></span>
                         <span class="btn btn-default" style="float:left;width:70px;
-                 margin-left:15px;"
-                              data-bind="click:reset" type="button"><@spring.message
-                 "hap.reset"/></span>
+                 margin-left:15px;"data-bind="click:reset" type="button"><@spring.message
+                 "hap.back"/></span>
                         <div id="test" style="display: none"></div>
                     </div>
                     <div style="clear:both"></div>
-                    <!--<script>kendo.bind($('#query-form'), viewModel);</script>-->
+                    <script>kendo.bind($('#query-form'), viewModel);</script>
                 </td>
             </tr>
         </table>
@@ -140,7 +152,7 @@
                 <div style="height: 100%;line-height: 30px;margin-left: 10px">
                     <span style="margin-left:10px;cursor:pointer" data-bind="click:create" class="glyphicon glyphicon-plus"><@spring.message "hap.new"/></span>
                     <span style="margin-left:10px;cursor:pointer" data-bind="click:save" class="glyphicon glyphicon-plus"><@spring.message "hap.save"/></span>
-                    <span style="margin-left:10px;cursor:pointer" data-bind="click:delete" class="glyphicon glyphicon-plus"><@spring.message "hap.delete"/></span>
+                    <span style="margin-left:10px;cursor:pointer" data-bind="click:remove" class="glyphicon glyphicon-plus"><@spring.message "hap.delete"/></span>
                 </div>
             </div>
             <div id="grid"></div>
@@ -152,13 +164,30 @@
 <script type="text/javascript">
     /*var dataSource = Hap.createGridDataSource({})*/
     Hap.initEnterQuery('#query-form', viewModel.query);
-    var BaseUrl = _basePath;
-    var num=location.href.split("=");
-    var myheaderId=num[num.length-1];
+    Hap.prepareSubmitParameter = function (options, type) {
+        var datas = options.models;
+        $.each(datas, function (i, r) {
+            if (type == 'create'){
+                r['__status'] = 'add';
+                r.headerId= viewModel.model.get("headerId");
+                r.companyId= viewModel.model.get("companyId");
+                r.dirtyFields.headerId= "true";
+                r.dirtyFields.companyId= "true";
+            }
+            else if (type == 'update')
+                r['__status'] = 'update';
+            else if (type == 'destroy')
+                r['__status'] = 'delete';
+        });
+        return datas;
+    };
+
+
+    murl=${RequestParameters.id!0};
     dataSource = new kendo.data.DataSource({
         transport: {
             read: {
-                url: BaseUrl + "/hap/sub/census/detail?headerId="+${RequestParameters.id!0},
+                url: BaseUrl + "/hap/sub/census/detail?orderNum="+murl,
                 type: "POST",
                 dataType: "json"
             },
@@ -177,6 +206,7 @@
                 type: "POST",
                 contentType: "application/json"
             },
+
             parameterMap: function (options, type) {
                 if (type !== "read" && options.models) {
                     var datas = Hap.prepareSubmitParameter(options, type)
@@ -209,14 +239,14 @@
                     orderStatus: {type: "string"},
                     itemCode: {type: "string"},
                     inventoryItemId:{type: "long"},
-                    itemDescription: {type: "string"},
+                    itemDescription: {type: "string",editable: false},
                     orderdQuantity: {type: "long"},
                     unitSellingPrice: {type: "long"},
                     orderQuantityUOM: {type: "string"},
                     description: {type: "string"},
                     headerId: {type: "long"},
-                    total: {type: "long"}
-
+                    total: {type: "long"},
+                    itemUOM: {type: "string",editable: false}
                 }
             }
         }
@@ -261,8 +291,8 @@
             },
 
             {
-                field: "orderQuantityUOM",
-                title: '<@spring.message "censu.orderQuantityUOM"/>',
+                field: "itemUOM",
+                title: '<@spring.message "censu.itemUOM"/>',
                 width:50
             },
             {
@@ -341,7 +371,8 @@
                         select: function(e) {
                             options.model.set('itemCode', e.item.itemCode);
                             options.model.set('itemDescription', e.item.itemDescription);
-                            options.model.set('orderQuantityUOM', e.item.orderQuantityUOM);
+                            options.model.set('itemUOM', e.item.itemUOM);
+                            options.model.set('inventoryItemId', e.item.inventoryItemId);
                             //options.model.set('employeeId', e.item.employeeId);
                         }
                     }));
@@ -360,8 +391,8 @@
                 width: 66
             },
             {
-                field: "orderQuantityUOM",
-                title: '<@spring.message "censu.orderQuantityUOM"/>',
+                field: "itemUOM",
+                title: '<@spring.message "censu.itemUOM"/>',
                 attributes: {style: "text-align:center"},
                 headerAttributes: {
                     "class": "table-header-cell",
@@ -372,6 +403,16 @@
             {
                 field: "unitSellingPrice",
                 title: '<@spring.message "censu.unitSellingPrice"/>',
+                attributes: {style: "text-align:center"},
+                headerAttributes: {
+                    "class": "table-header-cell",
+                    style: "text-align: center"
+                },
+                width: 66
+            },
+            {
+                field: "orderdQuantity",
+                title: '<@spring.message "censu.orderdQuantity"/>',
                 attributes: {style: "text-align:center"},
                 headerAttributes: {
                     "class": "table-header-cell",
@@ -481,43 +522,43 @@
     var orderNum = '${RequestParameters.id!0}';
     if (orderNum!=0) {
         $.ajax({
-            url: '${base.contextPath}/hap/sub/census/query?orderNum=${RequestParameters.id!0}',
+            url: '${base.contextPath}/hap/sub/census/query?orderNum='+murl,
             success: function (args) {
-                console.log(args)
-                console.log(args.rows.length)
+                console.log(args);
+                console.log(args.rows.length);
                 var a0 = args.rows[0] || {};
                 for (var k in a0) {
                     viewModel.model.set(k, a0[k]);
-
                 }
 
             }
         });
     }
 
-    $.ajax({
-        url: _basePath + "/hap/sub/census/detail?headerId="+myheaderId,
-        type: 'POST',
-        contentType: "application/json;charset=utf-8",
-        cache: false,
-        dataType: 'json',
-        async: false,
-        success: function (data) {
-            for (var i = 0; i < data.rows.length; i++) {
-                myData.push(new myDataToJson(data.rows[i]));
-            }
-        }
-    });
 
-    var myLocalDataSource = new kendo.data.DataSource({data: myData});
-    $("#lineId").kendoAutoComplete({
-        dataTextField: "lineId",
-        dataSource: myLocalDataSource
-    });
-    $("#orderNumber").kendoAutoComplete({
-        dataTextField: "orderNumber",
-        dataSource: myLocalDataSource
-    });
+    // $.ajax({
+    //     url: _basePath + "/hap/sub/census/detail?headerId="+myheaderId,
+    //     type: 'POST',
+    //     contentType: "application/json;charset=utf-8",
+    //     cache: false,
+    //     dataType: 'json',
+    //     async: false,
+    //     success: function (data) {
+    //         for (var i = 0; i < data.rows.length; i++) {
+    //             myData.push(new myDataToJson(data.rows[i]));
+    //         }
+    //     }
+    // });
+    //
+    // var myLocalDataSource = new kendo.data.DataSource({data: myData});
+    // $("#lineId").kendoAutoComplete({
+    //     dataTextField: "lineId",
+    //     dataSource: myLocalDataSource
+    // });
+    // $("#orderNumber").kendoAutoComplete({
+    //     dataTextField: "orderNumber",
+    //     dataSource: myLocalDataSource
+    // });
 
 
     // $("#orderStatus").kendoComboBox({

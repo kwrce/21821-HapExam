@@ -9,7 +9,7 @@ public interface CensuMapper extends Mapper<Censu>{
     List<Censu> selectByCensu(Censu Censu);
     int insertCensu(Censu Censu);
     int updateCensu(Censu Censu);
-    int deleteCensu(Censu Censu);
-
+    int deleteByPrimaryKey(Censu Censu);
     List<Censu> selectByCensuDetail(Censu Censu);
+    int addOneCensu(Censu censu);
 }

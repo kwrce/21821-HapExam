@@ -44,18 +44,20 @@ public class CensuController extends BaseController {
     }
     @RequestMapping("/hap/sub/census/detail")
     @ResponseBody
-    public ResponseData selectListDetail(String headerId,
+    public ResponseData selectListDetail(Long orderNum,
                                    HttpServletRequest request, Censu condition,
                                    @RequestParam(defaultValue = DEFAULT_PAGE) int page,
                                    @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int pagesize) {
-        System.out.println("+++++++++++++++++++++++++++++++++++++");
-        System.out.println(headerId);
-        System.out.println("+++++++++++++++++++++++++++++++++++++");
-        if(headerId==null){
+
+        if(orderNum==null){
             condition.setOrderNumber("-1");
         }
         else
-            condition.setOrderNumber(""+headerId);
+            condition.setOrderNumber(""+orderNum);
+        System.out.println("+++++++++++++++++++++++++++++++++++++");
+        System.out.println(orderNum);
+        System.out.println(condition);
+        System.out.println("+++++++++++++++++++++++++++++++++++++");
         IRequest iRequest = createRequestContext(request);
         List<Censu> datas = censuService.selectByCensuDetail(iRequest, condition, page,
                 pagesize);
@@ -70,8 +72,26 @@ public class CensuController extends BaseController {
     public ResponseData submit(HttpServletRequest request, @RequestBody
             List<Censu> census) {
         IRequest iRequest = createRequestContext(request);
+        System.out.println(")))))))))))))))))))))))))))))))))");
+        for (Censu censu:census){
+            System.out.println(censu);
+        }
+        System.out.println(")))))))))))))))))))))))))))))))))");
         List<Censu> datas = censuService.batchUpdate(iRequest, census);
         return new ResponseData(datas);
+    }
+
+    @RequestMapping(value = "/hap/sub/census/saveorder", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseData saveorder(HttpServletRequest request, @RequestBody
+            Censu censu) {
+        IRequest iRequest = createRequestContext(request);
+        System.out.println(")))))))))))))))))))))))))))))))))");
+            System.out.println(censu);
+        System.out.println(")))))))))))))))))))))))))))))))))");
+        int row= censuService.addCensu(iRequest, censu);
+
+        return new ResponseData();
     }
 
     @RequestMapping(value = "/hap/sub/census/remove", method = RequestMethod.POST)
@@ -79,6 +99,11 @@ public class CensuController extends BaseController {
     public ResponseData delete(HttpServletRequest request, @RequestBody
             List<Censu> census) {
         IRequest iRequest = createRequestContext(request);
+        System.out.println("0000000000000000000000000000000000000");
+        for (Censu censu:census){
+            System.out.println(censu);
+        }
+        System.out.println("0000000000000000000000000000000000000");
         censuService.batchDelete(census);
         return new ResponseData();
     }
