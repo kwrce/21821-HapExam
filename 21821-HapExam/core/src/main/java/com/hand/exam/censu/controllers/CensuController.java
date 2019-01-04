@@ -25,9 +25,15 @@ public class CensuController extends BaseController {
 
     @RequestMapping("/hap/sub/census/query")
     @ResponseBody
-    public ResponseData selectList(HttpServletRequest request, Censu condition,
+    public ResponseData selectList(Long orderNum,
+                                   HttpServletRequest request, Censu condition,
                                    @RequestParam(defaultValue = DEFAULT_PAGE) int page,
                                    @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int pagesize) {
+        System.out.println("===================================================");
+        System.out.println(orderNum);
+        System.out.println("===================================================");
+        if(orderNum!=null)
+            condition.setOrderNumber(orderNum+"");
         IRequest iRequest = createRequestContext(request);
         List<Censu> datas = censuService.selectByCensu(iRequest, condition, page,
                 pagesize);

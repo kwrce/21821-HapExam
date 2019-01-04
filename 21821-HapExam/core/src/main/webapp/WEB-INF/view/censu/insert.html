@@ -8,7 +8,6 @@
             {mean: "POST", value: "POST"}],
         orderStatus: orderStatus
     });
-
 </script>
 <style>
     td{
@@ -64,8 +63,9 @@
                     &nbsp;&nbsp;&nbsp;<@spring.message "Censu.itemDescription"/>&nbsp;&nbsp;&nbsp;
                 </td>
                 <td>
-                    <input type="text" id="itemDescription" placeholder='<@spring.message "Censu.itemDescription"/>'
-                           data-bind="value:model.inventoryItemId,text:model.itemDescription">
+                    <input type="date" data-role="datepicker"placeholder='<@spring.message "censu.orderDate"/>'
+                           data-bind="value:model.orderDate" class="k-datepicker">
+
                     <script>
                         $("#companyName").kendoLov(${lovProvider.getLov(base.contextPath, base.locale,
         "LOV_COMPANY_ID")});
@@ -83,6 +83,7 @@
                     <input id="oderSum" type="text"
                            data-role="maskedtextbox"
                            placeholder='<@spring.message "Censu.oderSum"/>'
+                           data-bind="value:model.total"
                            >
 
                     <!--<input type="date" data-role="datepicker"placeholder='<@spring.message "demo.myBirthday"/>' data-bind="value:model.myBirthday" class="k-datepicker">-->
@@ -154,12 +155,10 @@
     var BaseUrl = _basePath;
     var num=location.href.split("=");
     var myheaderId=num[num.length-1];
-    if (myheaderId=="undefined")
-        myheaderId="-1";
     dataSource = new kendo.data.DataSource({
         transport: {
             read: {
-                url: BaseUrl + "/hap/sub/census/detail?headerId="+myheaderId,
+                url: BaseUrl + "/hap/sub/census/detail?headerId="+${RequestParameters.id!0},
                 type: "POST",
                 dataType: "json"
             },
@@ -341,6 +340,8 @@
                         model    : options.model,
                         select: function(e) {
                             options.model.set('itemCode', e.item.itemCode);
+                            options.model.set('itemDescription', e.item.itemDescription);
+                            options.model.set('orderQuantityUOM', e.item.orderQuantityUOM);
                             //options.model.set('employeeId', e.item.employeeId);
                         }
                     }));
@@ -475,6 +476,23 @@
         this.itemCescription = data.itemCescription;
         this.orderdQuantity = data.orderdQuantity;
         this.unitSellingPrice = data.unitSellingPrice;
+    }
+
+    var orderNum = '${RequestParameters.id!0}';
+    if (orderNum!=0) {
+        $.ajax({
+            url: '${base.contextPath}/hap/sub/census/query?orderNum=${RequestParameters.id!0}',
+            success: function (args) {
+                console.log(args)
+                console.log(args.rows.length)
+                var a0 = args.rows[0] || {};
+                for (var k in a0) {
+                    viewModel.model.set(k, a0[k]);
+
+                }
+
+            }
+        });
     }
 
     $.ajax({
