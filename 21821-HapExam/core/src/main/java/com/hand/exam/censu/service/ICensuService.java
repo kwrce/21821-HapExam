@@ -11,6 +11,8 @@ import java.util.List;
 public interface ICensuService extends IBaseService<Censu>, ProxySelf<ICensuService>{
     List<Censu> selectByCensu(IRequest requestContext, Censu censu, int page, int
             pagesize);
+    List<Censu> selectByCensuDetail(IRequest requestContext, Censu censu, int page, int
+            pagesize);
 
     List<Censu> batchUpdate(IRequest requestContext, @StdWho List<Censu>
             census);

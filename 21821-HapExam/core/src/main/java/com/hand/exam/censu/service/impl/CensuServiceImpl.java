@@ -30,6 +30,12 @@ public class CensuServiceImpl extends BaseServiceImpl<Censu> implements ICensuSe
     }
 
     @Override
+    public List<Censu> selectByCensuDetail(IRequest requestContext, Censu censu, int page, int pagesize) {
+        PageHelper.startPage(page, pagesize);
+        return censuMapper.selectByCensuDetail(censu);
+    }
+
+    @Override
     @Transactional(propagation = Propagation.SUPPORTS)
     public List<Censu> batchUpdate(IRequest requestContext, List<Censu> census){
         for (Censu censu : census) {

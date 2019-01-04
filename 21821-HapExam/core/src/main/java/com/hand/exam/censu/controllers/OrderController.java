@@ -25,9 +25,11 @@ private IOrderService service;
 
 @RequestMapping(value = "/hap/om/order/lines/query")
 @ResponseBody
-public ResponseData query(Order dto, @RequestParam(defaultValue = DEFAULT_PAGE) int page,
+public ResponseData query(Long id,Order dto, @RequestParam(defaultValue = DEFAULT_PAGE) int page,
     @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int pageSize, HttpServletRequest request) {
-
+    System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++");
+    System.out.println(id);
+    System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++");
     IRequest requestContext = createRequestContext(request);
     return new ResponseData(service.select(requestContext,dto,page,pageSize));
 }

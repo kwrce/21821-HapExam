@@ -10,4 +10,6 @@ public interface CensuMapper extends Mapper<Censu>{
     int insertCensu(Censu Censu);
     int updateCensu(Censu Censu);
     int deleteCensu(Censu Censu);
+
+    List<Censu> selectByCensuDetail(Censu Censu);
 }

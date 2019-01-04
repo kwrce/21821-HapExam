@@ -43,9 +43,11 @@
                     &nbsp;&nbsp;&nbsp;<@spring.message "Censu.customerName"/>&nbsp;&nbsp;&nbsp;
                 </td>
                 <td>
+
                     <input type="text" id="customerName"
                            placeholder='<@spring.message "Censu.customerName"/>'
                            data-bind="value:model.customerId,text:model.customerName">
+
                 </td>
                 <td>
                     &nbsp;&nbsp;&nbsp;<@spring.message "Censu.orderNumber"/>&nbsp;&nbsp;&nbsp;
@@ -107,7 +109,7 @@
         <div style="clear:both">
             <div style="width: 100%;height: 30px;background-color:#e7e5e0">
                 <div style="height: 100%;line-height: 30px;margin-left: 10px">
-                    <a href="/insert"><span class="glyphicon glyphicon-plus"><@spring.message "hap.new"/></span></a>
+                    <a href="/hap/censu/insert.html?headerId=-1"><span class="glyphicon glyphicon-plus"><@spring.message "hap.new"/></span></a>
                 </div>
             </div>
             <div id="grid"></div>
@@ -162,9 +164,10 @@
             data: 'rows',
             total: 'total',
             model: {
-                    id: "lineId",
+                    id: "headerId",
                     fields: {
                     lineId: {type: "long"},
+                    headerId:{type: "long"},
                     orderNumber: {type: "string"},
                     companyName: {type: "string"},
                     companyId: {type: "long"},
@@ -176,12 +179,14 @@
                     inventoryItemId:{type: "long"},
                     itemDescription: {type: "string"},
                     orderdQuantity: {type: "long"},
-                    unitSellingPrice: {type: "long"}
+                    unitSellingPrice: {type: "long"},
+                    total:{type: "long"}
                 }
             }
         }
 
     });
+
     var test = $("#test").kendoGrid({
         dataSource: dataSource,
         height: '0',
@@ -247,8 +252,8 @@
                 width:50
             },
             {
-                field: "unitSellingPrice",
-                title: '<@spring.message "censu.unitsellingprice"/>',
+                field: "total",
+                title: '<@spring.message "censu.total"/>',
                 width:50
             }
         ],
@@ -295,6 +300,9 @@
                 field: "orderNumber",
                 title: '<@spring.message "censu.ordernumber"/>',
                 attributes: {style: "text-align:center"},
+                template: function (rowdata) {
+                    return '<a href="insert.html?id='+rowdata.orderNumber+'">'+rowdata.orderNumber+'</a>';
+                },
                 headerAttributes: {
                     "class": "table-header-cell",
                     style: "text-align: center"
@@ -366,8 +374,8 @@
             //     width: 66
             // },
             {
-                field: "unitSellingPrice",
-                title: '<@spring.message "censu.unitsellingprice"/>',
+                field: "total",
+                title: '<@spring.message "censu.total"/>',
                 attributes: {style: "text-align:center"},
                 headerAttributes: {
                     "class": "table-header-cell",
@@ -481,6 +489,7 @@
     //     change: function () {
     //     }
     // });
+
 </script>
 </body>
 </html>
