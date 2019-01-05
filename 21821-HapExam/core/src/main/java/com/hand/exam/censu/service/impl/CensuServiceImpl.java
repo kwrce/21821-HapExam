@@ -67,5 +67,18 @@ public class CensuServiceImpl extends BaseServiceImpl<Censu> implements ICensuSe
         return row;
     }
 
+    @Override
+    public int updateCensu(IRequest iRequest, Censu censu) {
+        censu.setLastUpdateDate(new Date());
+        int row =censuMapper.updateOneCensu(censu);
+        return row;
+    }
+
+    @Override
+    public int deleteCensu(IRequest iRequest, Censu censu) {
+        int row =censuMapper.deleteOneCensu(censu);
+        return row;
+    }
+
 
 }

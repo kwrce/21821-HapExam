@@ -98,7 +98,7 @@
                             placeholder='<@spring.message "Censu.orderStatus"/>'
                             data-bind="source:orderStatus,value:model.orderStatus"
                     ></select>
-
+                    <input type="hidden"id="btstu" data-bind="value:model.btstu">
                     <!--<input type="date" data-role="datepicker"placeholder='<@spring.message "demo.myBirthday"/>' data-bind="value:model.myBirthday" class="k-datepicker">-->
                 </td>
             </tr>
@@ -111,13 +111,22 @@
                               data-bind="click:query">
                             <@spring.message "hap.save"/></span>
                         <span class="btn btn-primary" style="float:left;width:70px;
-                 margin-left:15px;" ><@spring.message "hap.submit"/></span>
+                 margin-left:15px;" data-bind="click:query"><@spring.message "hap.submit"/></span>
+
                         <span class="btn btn-primary" id="export" style="float:left;width:70px;
                  margin-left:15px;"><@spring.message " hap.exportexcel"/></span>
                         <span class="btn btn-default" style="float:left;width:80px;
-                 margin-left:15px;"
-                              data-bind="click:reset" type="button"><@spring.message
+                 margin-left:15px;" onclick="mydelete()"
+                              data-bind="click:query" type="button"><@spring.message
                  "censu.deleteall"/></span>
+                        <script type="text/javascript">
+                            function mydelete(){
+                                if (window.confirm("你确定要删除吗？")) {
+                                    viewModel.model.set("btstu","delete");
+                                }
+                            }
+
+                        </script>
                         <span class="btn btn-default" style="float:left;width:70px;
                  margin-left:15px;"data-bind="click:reset" type="button"><@spring.message
                  "hap.examine"/></span>
@@ -235,7 +244,8 @@
                     description: {type: "string"},
                     headerId: {type: "long"},
                     total: {type: "long"},
-                    itemUOM: {type: "string",editable: false}
+                    itemUOM: {type: "string",editable: false},
+
                 }
             }
         }
@@ -520,6 +530,7 @@
                 for (var k in a0) {
                     viewModel.model.set(k, a0[k]);
                 }
+
             }
         });
     }

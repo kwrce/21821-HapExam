@@ -44,20 +44,37 @@ public class CensuController extends BaseController {
     }
     @RequestMapping("/hap/sub/census/detail")
     @ResponseBody
-    public ResponseData selectListDetail(Long orderNum,
+    public ResponseData selectListDetail(
+                                   String btstu,
+                                   Long orderNum,
                                    HttpServletRequest request, Censu condition,
                                    @RequestParam(defaultValue = DEFAULT_PAGE) int page,
                                    @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int pagesize) {
 
         System.out.println(")))))))))))))))))))))))))))))))))");
+        System.out.println(btstu);
         System.out.println(orderNum);
         System.out.println(condition);
         System.out.println(")))))))))))))))))))))))))))))))))");
         IRequest iRequest = createRequestContext(request);
         if ("NEW".equals(condition.getOrderStatus())){
+            condition.setOrderStatus("SUBMITED");
             int row= censuService.addCensu(iRequest, condition);
             if (row>0)
                 System.out.println("添加成功");
+        }
+        if ("SUBMITED".equals(condition.getOrderStatus())){
+            int row= censuService.updateCensu(iRequest, condition);
+            if (row>0)
+                System.out.println("更新成功");
+        }
+        if ("delete".equals(btstu)){
+            List<Censu> datas = censuService.selectByCensuDetail(iRequest, condition, page,
+                    pagesize);
+            censuService.batchDelete(datas);
+            int row= censuService.deleteCensu(iRequest, condition);
+            if (row>0)
+                System.out.println("删除成功");
         }
         if(orderNum==null){
             condition.setOrderNumber("-1");

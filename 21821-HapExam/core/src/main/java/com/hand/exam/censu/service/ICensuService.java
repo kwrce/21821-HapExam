@@ -15,6 +15,8 @@ public interface ICensuService extends IBaseService<Censu>, ProxySelf<ICensuServ
             pagesize);
     List<Censu> batchUpdate(IRequest requestContext, @StdWho List<Censu>
             census);
-
     int addCensu(IRequest iRequest, Censu censu);
+    int updateCensu(IRequest iRequest, Censu censu);
+
+    int deleteCensu(IRequest iRequest, Censu condition);
 }

@@ -274,4 +274,34 @@
             </if>
         </trim>
     </insert>
+    <!--更新订单-->
+    <update id="updateOneCensu" parameterType="com.hand.exam.censu.dto.Censu" >
+        update hap_om_order_headers
+        <set >
+            <if test="orderNumber != null" >
+                HEADER_ID=#{orderNumber,jdbcType=DECIMAL},
+            </if>
+            <if test="orderNumber != null" >
+                ORDER_NUMBER=#{orderNumber,jdbcType=DECIMAL},
+            </if>
+            <if test="companyId != null" >
+                COMPANY_ID=#{companyId,jdbcType=DECIMAL},
+            </if>
+            <if test="orderDate != null" >
+                ORDER_DATE=#{orderDate,jdbcType=DATE},
+            </if>
+            <if test="orderStatus != null">
+                ORDER_STATUS=#{orderStatus,jdbcType=DECIMAL},
+            </if>
+            <if test="customerId != null">
+                CUSTOMER_ID=#{customerId,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where ORDER_NUMBER = #{orderNumber,jdbcType=DECIMAL}
+    </update>
+    <!--删除订单-->
+    <delete id="deleteOneCensu" parameterType="com.hand.exam.censu.dto.Censu" >
+        delete from hap_om_order_headers
+        where ORDER_NUMBER = #{orderNumber,jdbcType=DECIMAL}
+    </delete>
 </mapper>
