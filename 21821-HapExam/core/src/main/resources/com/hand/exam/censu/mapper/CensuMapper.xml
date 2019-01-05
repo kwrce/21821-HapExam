@@ -231,9 +231,12 @@
     </delete>
 
     <!--添加订单-->
-    <insert id="insertCensu" parameterType="com.hand.exam.censu.dto.Censu" >
+    <insert id="addOneCensu" parameterType="com.hand.exam.censu.dto.Censu" >
         INSERT INTO hap_om_order_headers
         <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="orderNumber != null" >
+                HEADER_ID,
+            </if>
             <if test="orderNumber != null" >
                 ORDER_NUMBER,
             </if>
@@ -251,6 +254,9 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="orderNumber != null" >
+                #{orderNumber,jdbcType=DECIMAL},
+            </if>
             <if test="orderNumber != null" >
                 #{orderNumber,jdbcType=DECIMAL},
             </if>

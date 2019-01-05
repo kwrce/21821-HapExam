@@ -46,7 +46,7 @@
                 <td>
                     <input type="text" id="companyName"
                            placeholder='<@spring.message "Censu.companyName"/>'
-                           data-bind="value:model.companyId,text:model.companyName">
+                           data-bind="value:model.companyId,text:model.companyName" >
                 </td>
                 <td>
                     &nbsp;&nbsp;&nbsp;<@spring.message "Censu.customerName"/>&nbsp;&nbsp;&nbsp;
@@ -96,32 +96,20 @@
                     <select data-role="combobox" data-value-primitive="true"
                             data-text-field="meaning" data-value-field="value"
                             placeholder='<@spring.message "Censu.orderStatus"/>'
-                            data-bind="source:orderStatus,value:model.orderStatus"></select>
+                            data-bind="source:orderStatus,value:model.orderStatus"
+                    ></select>
 
                     <!--<input type="date" data-role="datepicker"placeholder='<@spring.message "demo.myBirthday"/>' data-bind="value:model.myBirthday" class="k-datepicker">-->
                 </td>
             </tr>
             <tr>
-                <script type="text/javascript">
-<!--=====================================================获取viewmodel参数=======================================================-->
-                $(document).ready(function(){
-                    $("#select input").click(function(){
-                        alert($(this).val());
-                    });
-                });
-function mysave() {
-                        var orderNumber=viewModel.model.get("orderNumber");
-                        var companyId=viewModel.model.get("companyId");
-                        var orderDate=viewModel.model.get("orderDate");
-                        var orderStatus2=viewModel.model.get("orderStatus");
-                        var customerId=viewModel.model.get("customerId");
 
-                    }
-                </script>
+
                 <td colspan="4">
                     <div style="margin-right:0px;" id="select">
-                        <input class="btn btn-default" name="sp" value="save" style="float:left;width:70px" type="button" onclick="mysave()">
-                            <@spring.message "hap.save"/></input>
+                        <span class="btn btn-default"  style="float:left;width:70px" type="button"
+                              data-bind="click:query">
+                            <@spring.message "hap.save"/></span>
                         <span class="btn btn-primary" style="float:left;width:70px;
                  margin-left:15px;" ><@spring.message "hap.submit"/></span>
                         <span class="btn btn-primary" id="export" style="float:left;width:70px;
@@ -136,9 +124,9 @@ function mysave() {
                         <span class="btn btn-default" style="float:left;width:70px;
                  margin-left:15px;"data-bind="click:reset" type="button"><@spring.message
                  "hap.refuse"/></span>
-                        <span class="btn btn-default" style="float:left;width:70px;
+                        <a href="censu.html"><span class="btn btn-default" style="float:left;width:70px;
                  margin-left:15px;"data-bind="click:reset" type="button"><@spring.message
-                 "hap.back"/></span>
+                            "hap.back"/></span></a>
                         <div id="test" style="display: none"></div>
                     </div>
                     <div style="clear:both"></div>
@@ -163,13 +151,14 @@ function mysave() {
 
 <script type="text/javascript">
     /*var dataSource = Hap.createGridDataSource({})*/
+
     Hap.initEnterQuery('#query-form', viewModel.query);
     Hap.prepareSubmitParameter = function (options, type) {
         var datas = options.models;
         $.each(datas, function (i, r) {
             if (type == 'create'){
                 r['__status'] = 'add';
-                r.headerId= viewModel.model.get("headerId");
+                r.headerId= viewModel.model.get("orderNumber");
                 r.companyId= viewModel.model.get("companyId");
                 r.dirtyFields.headerId= "true";
                 r.dirtyFields.companyId= "true";
@@ -252,6 +241,7 @@ function mysave() {
         }
 
     });
+
     var test = $("#test").kendoGrid({
         dataSource: dataSource,
         height: '0',
@@ -321,7 +311,7 @@ function mysave() {
 
     //打印调用
     $("#export").click(function() {
-        var grid = $("#test").data("kendoGrid");
+        var grid = $("#grid").data("kendoGrid");
         grid.saveAsExcel();
     });
     var grid = $("#grid").kendoGrid({
@@ -530,7 +520,6 @@ function mysave() {
                 for (var k in a0) {
                     viewModel.model.set(k, a0[k]);
                 }
-
             }
         });
     }

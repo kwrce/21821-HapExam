@@ -49,16 +49,21 @@ public class CensuController extends BaseController {
                                    @RequestParam(defaultValue = DEFAULT_PAGE) int page,
                                    @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int pagesize) {
 
+        System.out.println(")))))))))))))))))))))))))))))))))");
+        System.out.println(orderNum);
+        System.out.println(condition);
+        System.out.println(")))))))))))))))))))))))))))))))))");
+        IRequest iRequest = createRequestContext(request);
+        if ("NEW".equals(condition.getOrderStatus())){
+            int row= censuService.addCensu(iRequest, condition);
+            if (row>0)
+                System.out.println("添加成功");
+        }
         if(orderNum==null){
             condition.setOrderNumber("-1");
         }
         else
             condition.setOrderNumber(""+orderNum);
-        System.out.println("+++++++++++++++++++++++++++++++++++++");
-        System.out.println(orderNum);
-        System.out.println(condition);
-        System.out.println("+++++++++++++++++++++++++++++++++++++");
-        IRequest iRequest = createRequestContext(request);
         List<Censu> datas = censuService.selectByCensuDetail(iRequest, condition, page,
                 pagesize);
         for(Censu censu:datas){
@@ -81,18 +86,21 @@ public class CensuController extends BaseController {
         return new ResponseData(datas);
     }
 
-    @RequestMapping(value = "/hap/sub/census/saveorder", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseData saveorder(HttpServletRequest request, @RequestBody
-            Censu censu) {
-        IRequest iRequest = createRequestContext(request);
-        System.out.println(")))))))))))))))))))))))))))))))))");
-            System.out.println(censu);
-        System.out.println(")))))))))))))))))))))))))))))))))");
-        int row= censuService.addCensu(iRequest, censu);
-
-        return new ResponseData();
-    }
+//    @RequestMapping(value = "/hap/sub/census/saveorder", method = RequestMethod.POST)
+//    @ResponseBody
+//    public ResponseData saveorder(Long orderNum,
+//                                  HttpServletRequest request, Censu condition,
+//                                  @RequestParam(defaultValue = DEFAULT_PAGE) int page,
+//                                  @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int pagesize) {
+//        IRequest iRequest = createRequestContext(request);
+//        System.out.println(")))))))))))))))))))))))))))))))))");
+//            System.out.println(condition);
+//        System.out.println(")))))))))))))))))))))))))))))))))");
+//        int row= censuService.addCensu(iRequest, condition);
+//        if (row>0)
+//            System.out.println("添加成功");
+//        return new ResponseData();
+//    }
 
     @RequestMapping(value = "/hap/sub/census/remove", method = RequestMethod.POST)
     @ResponseBody
